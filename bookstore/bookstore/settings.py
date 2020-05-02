@@ -28,6 +28,16 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+AUTHENTICATION_BACKENDS=(
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_USERNAME_REQUIRED=False #sign up with username
+ACCOUNT_AUTHENTIFICATION_METHOD='email' #login with e-mail
+ACCOUNT_EMAIL_REQUIRED=True #email required for signing up
+ACCOUNT_UNIQUE_EMAIL=True #unique email address
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,7 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites', #to allow allauth
     'crispy_forms',
+    'allauth',
+    'allauth.account',
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
 
@@ -142,3 +155,7 @@ STATICFILES_FINDERS=[
 LOGIN_REDIRECT_URL='home'
 
 LOGOUT_REDIRECT_URL='home'
+
+SITE_ID=1
+
+EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
