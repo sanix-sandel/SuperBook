@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
+    'books.apps.BooksConfig',
 
 ]
 
@@ -159,3 +160,5 @@ LOGOUT_REDIRECT_URL='home'
 SITE_ID=1
 
 EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_FROM_EMAIL='admin@bookstore.com'
