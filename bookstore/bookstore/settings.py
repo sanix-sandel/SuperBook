@@ -23,10 +23,24 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '#r*))k=a5vf!*qx51bdxc@^8%cs*_v3^q^8!s7(l#!6+h_xbw8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
 
+ENVIRONMENT=os.environ.get('ENVIRONMENT', default='development')
+
+
+if ENVIRONMENT=='production':
+    SECURE_BROWSER_XSS_FILTER=True #For Xss(Cross site Scripting)
+    X_FRAME_OPTIONS='DENY'
+    SECURE_SSL_REDIRECT=True#For Https/SLL
+    SECURE_HSTS_SECONDS=3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS=True
+    SECURE_HSTS_PRELOAD=True
+    SECURE_CONTENT_TYPE_NOSNIFF=True
+    SESSION_COOKIE_SECURE=True
+    CSRF_COOKIE_SECURE=True
+    
 
 AUTHENTICATION_BACKENDS=(
     'django.contrib.auth.backends.ModelBackend',
@@ -77,7 +91,7 @@ ROOT_URLCONF = 'bookstore.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,9 +115,9 @@ WSGI_APPLICATION = 'bookstore.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 
-        'USER':
-        'PASSWORD':
+        'NAME': 'bookstore',
+        'USER':'sanix',
+        'PASSWORD':'19972017',
         'PORT':5432
     }
 }
