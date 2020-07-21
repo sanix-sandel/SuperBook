@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#r*))k=a5vf!*qx51bdxc@^8%cs*_v3^q^8!s7(l#!6+h_xbw8'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -28,6 +29,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
 
 ENVIRONMENT=os.environ.get('ENVIRONMENT', default='development')
+
 
 
 if ENVIRONMENT=='production':
@@ -40,7 +42,7 @@ if ENVIRONMENT=='production':
     SECURE_CONTENT_TYPE_NOSNIFF=True
     SESSION_COOKIE_SECURE=True
     CSRF_COOKIE_SECURE=True
-    
+
 
 AUTHENTICATION_BACKENDS=(
     'django.contrib.auth.backends.ModelBackend',
@@ -61,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',#for serving static files from the server
     'django.contrib.staticfiles',
     'django.contrib.sites', #to allow allauth
     'crispy_forms',
@@ -78,6 +81,7 @@ AUTH_USER_MODEL='users.CustomUser' #added for customed user
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',#for whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -113,13 +117,10 @@ WSGI_APPLICATION = 'bookstore.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bookstore',
-        'USER':'sanix',
-        'PASSWORD':'19972017',
-        'PORT':5432
-    }
+    'default':dj_database_url.config(
+        default=config('DATABASE_URL')
+    ) 
+        
 }
 
 
@@ -179,3 +180,9 @@ SITE_ID=1
 EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 
 DEFAULT_FROM_EMAIL='admin@bookstore.com'
+
+#Heroku
+import dj_database_url
+
+db_from_env=dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
